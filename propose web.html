@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>For You ❤️</title>
+  <style>
+    :root{
+      --bg1:#0b0014;
+      --bg2:#240015;
+      --accent:#ff2d6d;
+      --accent2:#ff7aa8;
+      --text:#ffffff;
+      --muted:rgba(255,255,255,.72);
+      --glass:rgba(255,255,255,.08);
+      --stroke:rgba(255,255,255,.14);
+      --shadow: 0 18px 55px rgba(0,0,0,.55);
+      --radius: 18px;
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+    body{
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      color:var(--text);
+      overflow-x:hidden;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(255,45,109,.18), transparent 55%),
+                  radial-gradient(1000px 700px at 80% 20%, rgba(255,122,168,.14), transparent 60%),
+                  linear-gradient(130deg, var(--bg1), var(--bg2));
+      min-height:100vh;
+    }
+
+    /* Background particles */
+    .hearts{
+      position:fixed; inset:0;
+      pointer-events:none;
+      overflow:hidden;
+      z-index:0;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,.35));
+    }
+    .heart{
+      position:absolute;
+      width:10px; height:10px;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      transform: rotate(45deg);
+      opacity:.85;
+      animation: floatUp linear infinite;
+      border-radius:2px;
+    }
+    .heart:before,.heart:after{
+      content:"";
+      position:absolute;
+      width:10px;height:10px;
+      background:inherit;
+      border-radius:50%;
+    }
+    .heart:before{ left:-5px; top:0; }
+    .heart:after{ top:-5px; left:0; }
+
+    @keyframes floatUp{
+      from{ transform: translateY(120vh) rotate(45deg); }
+      to{ transform: translateY(-20vh) rotate(45deg); }
+    }
+
+    /* Layout */
+    .wrap{ position:relative; z-index:1; }
+    header{
+      padding:26px 18px 12px;
+      display:flex;
+      justify-content:center;
+    }
+    .topbar{
+      width:min(1100px, 94vw);
+      display:flex; align-items:center; justify-content:space-between;
+      gap:14px;
+      padding:14px 16px;
+      border:1px solid var(--stroke);
+      background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      border-radius:999px;
+      box-shadow: 0 12px 40px rgba(0,0,0,.35);
+      backdrop-filter: blur(10px);
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+      font-weight:700; letter-spacing:.4px;
+    }
+    .dot{
+      width:12px;height:12px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, #fff, var(--accent));
+      box-shadow: 0 0 25px rgba(255,45,109,.6);
+    }
+    .pill{
+      font-size:12px;
+      color:var(--muted);
+      border:1px solid var(--stroke);
+      padding:7px 12px;
+      border-radius:999px;
+      background:rgba(0,0,0,.12);
+      white-space:nowrap;
+    }
+
+    main{
+      width:min(1100px, 94vw);
+      margin: 0 auto;
+      padding: 10px 0 70px;
+      display:flex;
+      flex-direction:column;
+      gap:28px;
+    }
+
+    .hero{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap:22px;
+      align-items:stretch;
+    }
+    @media (max-width: 900px){
+      .hero{ grid-template-columns:1fr; }
+      .pill{ display:none; }
+    }
+
+    .card{
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.05));
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      overflow:hidden;
+    }
+
+    .heroLeft{
+      padding:26px 22px;
+      position:relative;
+    }
+
+    .kicker{
+      display:inline-flex;
+      gap:10px;
+      align-items:center;
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(0,0,0,.14);
+      color:var(--muted);
+      font-size:13px;
+      margin-bottom:14px;
+    }
+    .kicker span{
+      display:inline-block;
+      width:8px;height:8px;border-radius:50%;
+      background:var(--accent);
+      box-shadow: 0 0 20px rgba(255,45,109,.6);
+    }
+
+    h1{
+      font-size: clamp(30px, 4.2vw, 56px);
+      line-height:1.05;
+      letter-spacing:-.8px;
+      margin-bottom:12px;
+    }
+    .sub{
+      color:var(--muted);
+      font-size: clamp(14px, 1.6vw, 18px);
+      line-height:1.6;
+      max-width: 56ch;
+    }
+
+    .ctaRow{
+      margin-top:18px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      align-items:center;
+    }
+
+    button{
+      border:0;
+      cursor:pointer;
+      font-weight:700;
+      letter-spacing:.2px;
+      padding:12px 16px;
+      border-radius: 14px;
+      transition: transform .15s ease, filter .2s ease, box-shadow .2s ease;
+    }
+    .btnYes{
+      background: radial-gradient(circle at 20% 20%, #fff, var(--accent));
+      color:#2a0013;
+      box-shadow: 0 12px 30px rgba(255,45,109,.25);
+    }
+    .btnYes:hover{ transform: translateY(-2px); filter: brightness(1.03); }
+    .btnNo{
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border: 1px solid var(--stroke);
+    }
+    .btnNo:hover{ transform: translateY(-2px); filter: brightness(1.06); }
+
+    .mini{
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    /* Hero image card */
+    .heroRight{
+      position:relative;
+      min-height: 320px;
+    }
+    .imgGrid{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap:10px;
+      padding:12px;
+      height:100%;
+    }
+    .ph{
+      border-radius: 14px;
+      border:1px solid var(--stroke);
+      background:
+        radial-gradient(120px 120px at 30% 30%, rgba(255,45,109,.25), transparent 60%),
+        linear-gradient(135deg, rgba(255,255,255,.08), rgba(0,0,0,.12));
+      position:relative;
+      overflow:hidden;
+    }
+    .ph img{
+      width:100%; height:100%;
+      object-fit:cover;
+      display:block;
+      filter: saturate(1.05) contrast(1.05);
+    }
+    .phLabel{
+      position:absolute;
+      left:10px; bottom:10px;
+      font-size:12px;
+      color:rgba(255,255,255,.85);
+      background:rgba(0,0,0,.35);
+      border:1px solid rgba(255,255,255,.18);
+      padding:6px 10px;
+      border-radius:999px;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Story section */
+    .story{
+      padding:22px;
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:16px;
+    }
+    @media (max-width: 900px){
+      .story{ grid-template-columns:1fr; }
+    }
+    .story h2{
+      font-size: clamp(22px, 2.2vw, 30px);
+      margin-bottom:10px;
+    }
+    .story p{
+      color:var(--muted);
+      line-height:1.75;
+      font-size: 15.5px;
+    }
+    .quote{
+      border:1px dashed rgba(255,255,255,.18);
+      border-radius: 16px;
+      padding:16px;
+      background: rgba(0,0,0,.12);
+    }
+    .quote b{ color:#fff; }
+    .quote .sig{
+      margin-top:12px;
+      color:rgba(255,255,255,.88);
+      font-weight:700;
+    }
+
+    /* Proposal modal */
+    .modalBack{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:18px;
+      z-index:50;
+      backdrop-filter: blur(8px);
+    }
+    .modal{
+      width:min(720px, 96vw);
+      border-radius: 22px;
+      border:1px solid rgba(255,255,255,.18);
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.06));
+      box-shadow: 0 24px 90px rgba(0,0,0,.7);
+      overflow:hidden;
+    }
+    .modalTop{
+      padding:18px 18px 10px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .modalTitle{
+      font-size: 20px;
+      font-weight:800;
+      letter-spacing:.2px;
+    }
+    .close{
+      background: rgba(255,255,255,.10);
+      border:1px solid rgba(255,255,255,.18);
+      color:#fff;
+      padding:10px 12px;
+      border-radius: 14px;
+    }
+    .modalBody{
+      padding: 0 18px 18px;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+    .bigAsk{
+      margin:14px 0 14px;
+      color:#fff;
+      font-size: clamp(26px, 3vw, 38px);
+      font-weight:900;
+      line-height:1.1;
+    }
+    .modalBtns{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      margin-top: 14px;
+    }
+
+    /* Reveal animation */
+    .reveal{
+      opacity:0;
+      transform: translateY(18px);
+      transition: opacity .9s ease, transform .9s ease;
+    }
+    .reveal.show{
+      opacity:1;
+      transform: translateY(0);
+    }
+
+    footer{
+      width:min(1100px, 94vw);
+      margin: 0 auto;
+      padding: 0 0 26px;
+      color: rgba(255,255,255,.55);
+      text-align:center;
+      font-size: 12.5px;
+    }
+    a{ color: var(--accent2); text-decoration:none; }
+  </style>
+</head>
+<body>
+
+  <!-- Floating hearts -->
+  <div class="hearts" id="hearts"></div>
+
+  <div class="wrap">
+    <header>
+      <div class="topbar">
+        <div class="brand">
+          <div class="dot"></div>
+          <div>For You</div>
+        </div>
+        <div class="pill">A small page — with a big question 💖</div>
+        <div class="pill" id="today"></div>
+      </div>
+    </header>
+
+    <main>
+      <!-- HERO -->
+      <section class="hero">
+        <div class="card heroLeft reveal">
+          <div class="kicker"><span></span> A message that I mean.</div>
+          <h1>
+            Hey <span id="name">[Her/His Name]</span>,<br>
+            I made this for you.
+          </h1>
+          <p class="sub">
+            Not because I’m trying to impress you… but because I wanted you to feel what you mean to me.
+            Every little moment with you feels like a scene I never want to end.
+          </p>
+
+          <div class="ctaRow">
+            <button class="btnYes" id="openAsk">Open the question 💌</button>
+            <button class="btnNo" id="scrollStory">Read why</button>
+            <span class="mini">Tip: Replace the text & photos to match your story.</span>
+          </div>
+        </div>
+
+        <div class="card heroRight reveal">
+          <div class="imgGrid">
+            <!-- Put your images in the same folder and rename like below -->
+            <div class="ph">
+              <img src="zooto.jpg" alt="Photo 1 (replace)" onerror="this.style.display='none'">
+              <div class="phLabel">Your Photo 1</div>
+            </div>
+            <div class="ph">
+              <img src="zootopia.jpg" alt="Photo 2 (replace)" onerror="this.style.display='none'">
+              <div class="phLabel">Your Photo 2</div>
+            </div>
+            <div class="ph">
+              <img src="cari3.png" alt="Photo 3 (replace)" onerror="this.style.display='none'">
+              <div class="phLabel">Your Photo 3</div>
+            </div>
+            <div class="ph">
+              <img src="cari4.png" alt="Photo 4 (replace)" onerror="this.style.display='none'">
+              <div class="phLabel">Your Photo 4</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- STORY -->
+      <section class="card story reveal" id="story">
+        <div>
+          <h2>What I’ve been wanting to say…</h2>
+          <p>
+            You have this way of making normal days feel lighter.
+            Even when things get messy, you feel like my calm.
+            I don’t want “someday” to be just a word — I want it to be a plan.
+          </p>
+          <p style="margin-top:10px">
+            I’m not promising perfection. I’m promising effort.
+            The kind that stays. The kind that chooses you.
+          </p>
+        </div>
+        <div class="quote">
+          <p>
+            <b>My favorite place</b> isn’t a location.<br>
+            It’s the moment I realize you’re smiling because of me.
+          </p>
+          <div class="sig">— <span id="yourName">[Your Name]</span></div>
+        </div>
+      </section>
+
+      <!-- FINAL CTA -->
+      <section class="card reveal" style="padding:22px; text-align:center">
+        <div style="font-size:14px; color:var(--muted); margin-bottom:8px">One honest question.</div>
+        <div style="font-size: clamp(26px, 3.2vw, 40px); font-weight:900; line-height:1.1">
+          Will you be mine? ❤️
+        </div>
+        <div style="margin-top:14px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap">
+          <button class="btnYes" id="openAsk2">Yes / Let’s do this 💞</button>
+          <button class="btnNo" id="shareTip">How do I share this?</button>
+        </div>
+        <div id="tip" style="display:none; margin-top:12px; color:var(--muted); line-height:1.6">
+          Put this <b>index.html</b> + your <b>photo1.jpg..photo4.jpg</b> in one folder → upload to GitHub Pages
+          (or Netlify) → share the link.
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Made with ❤️. Edit the placeholders and make it yours.
+    </footer>
+  </div>
+
+  <!-- MODAL -->
+  <div class="modalBack" id="modalBack">
+    <div class="modal">
+      <div class="modalTop">
+        <div>
+          <div class="modalTitle">Okay… deep breath 😶‍🌫️</div>
+          <div style="color:rgba(255,255,255,.65); font-size:13px; margin-top:4px">
+            (This is the part where my heart is racing.)
+          </div>
+        </div>
+        <button class="close" id="closeModal">Close</button>
+      </div>
+      <div class="modalBody">
+        <div class="bigAsk">Will you be my forever favorite person? ❤️</div>
+        <div>
+          If you say yes, I’ll treat your heart gently — and I’ll keep choosing you,
+          even on the boring days, even on the hard days.
+        </div>
+
+        <div class="modalBtns">
+          <button class="btnYes" id="yesBtn">YES 💖</button>
+          <button class="btnNo" id="noBtn">Not now 🙈</button>
+        </div>
+
+        <div id="result" style="display:none; margin-top:14px; padding:14px; border-radius:16px;
+            border:1px solid rgba(255,255,255,.18); background: rgba(0,0,0,.16);">
+          <div style="color:#fff; font-weight:900; font-size:18px" id="resultTitle"></div>
+          <div style="margin-top:6px" id="resultText"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Set today's date
+    const d = new Date();
+    document.getElementById("today").textContent =
+      d.toLocaleDateString(undefined, { weekday:"short", year:"numeric", month:"short", day:"numeric" });
+
+    // Simple scroll reveal
+    const reveals = document.querySelectorAll(".reveal");
+    const io = new IntersectionObserver(entries=>{
+      entries.forEach(e=>{
+        if(e.isIntersecting) e.target.classList.add("show");
+      });
+    }, { threshold: 0.12 });
+    reveals.forEach(r=>io.observe(r));
+
+    // Hearts generator
+    const hearts = document.getElementById("hearts");
+    const makeHeart = () => {
+      const h = document.createElement("div");
+      h.className = "heart";
+      const left = Math.random() * 100;
+      const size = 7 + Math.random() * 10;
+      const dur = 6 + Math.random() * 10;
+      const delay = Math.random() * 2;
+      h.style.left = left + "vw";
+      h.style.width = size + "px";
+      h.style.height = size + "px";
+      h.style.animationDuration = dur + "s";
+      h.style.animationDelay = delay + "s";
+      h.style.opacity = (0.35 + Math.random() * 0.6).toFixed(2);
+      hearts.appendChild(h);
+      setTimeout(()=> h.remove(), (dur + delay) * 1000);
+    };
+    for(let i=0;i<26;i++) makeHeart();
+    setInterval(makeHeart, 500);
+
+    // Buttons
+    const modalBack = document.getElementById("modalBack");
+    const openAsk = () => modalBack.style.display = "flex";
+    document.getElementById("openAsk").onclick = openAsk;
+    document.getElementById("openAsk2").onclick = openAsk;
+    document.getElementById("closeModal").onclick = () => modalBack.style.display = "none";
+    modalBack.addEventListener("click", (e)=>{ if(e.target === modalBack) modalBack.style.display="none"; });
+
+    document.getElementById("scrollStory").onclick = () => {
+      document.getElementById("story").scrollIntoView({behavior:"smooth", block:"start"});
+    };
+
+    document.getElementById("shareTip").onclick = () => {
+      const tip = document.getElementById("tip");
+      tip.style.display = tip.style.display === "none" ? "block" : "none";
+    };
+
+    // Modal yes/no result
+    const result = document.getElementById("result");
+    const resultTitle = document.getElementById("resultTitle");
+    const resultText = document.getElementById("resultText");
+
+    document.getElementById("yesBtn").onclick = () => {
+      result.style.display = "block";
+      resultTitle.textContent = "YOU SAID YES 😭❤️";
+      resultText.innerHTML =
+        "Okay… I’m officially the happiest person right now.<br>" +
+        "Screenshot this page and send it to me — I want to keep it forever.";
+      confettiBurst();
+    };
+
+    document.getElementById("noBtn").onclick = () => {
+      result.style.display = "block";
+      resultTitle.textContent = "I’ll still be here 💗";
+      resultText.textContent =
+        "No pressure. You matter to me more than a moment. Whenever you’re ready, I’ll ask again—properly.";
+    };
+
+    // Tiny confetti burst (no library)
+    function confettiBurst(){
+      const n = 90;
+      for(let i=0;i<n;i++){
+        const p = document.createElement("div");
+        p.style.position="fixed";
+        p.style.left = (50 + (Math.random()*12-6)) + "vw";
+        p.style.top = "40vh";
+        p.style.width = "6px";
+        p.style.height = "10px";
+        p.style.background = Math.random() > .5 ? "rgba(255,45,109,.95)" : "rgba(255,122,168,.95)";
+        p.style.transform = "rotate("+(Math.random()*360)+"deg)";
+        p.style.zIndex = 99;
+        p.style.borderRadius="2px";
+        document.body.appendChild(p);
+
+        const dx = (Math.random()*2-1) * 260;
+        const dy = 260 + Math.random()*220;
+        const rot = (Math.random()*2-1) * 520;
+
+        p.animate([
+          { transform:`translate(0,0) rotate(0deg)`, opacity:1 },
+          { transform:`translate(${dx}px, ${dy}px) rotate(${rot}deg)`, opacity:0 }
+        ], { duration: 1200 + Math.random()*700, easing:"cubic-bezier(.1,.8,.2,1)" });
+
+        setTimeout(()=>p.remove(), 2200);
+      }
+    }
+
+    // Easy personalization via URL params:
+    // index.html?name=Anu&from=Leo
+    const params = new URLSearchParams(location.search);
+    const nm = params.get("name");
+    const from = params.get("from");
+    if(nm) document.getElementById("name").textContent = nm;
+    if(from) document.getElementById("yourName").textContent = from;
+  </script>
+</body>
+</html>
